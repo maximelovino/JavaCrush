@@ -1,0 +1,13 @@
+private static final String[] images = {
+	"bird.png",
+	"cat.png",
+	"cricket.png",
+	"dolphin.png",
+	"dragon_fly.png",
+	"elephant.png",
+	"gnome_panel_fish.png",
+	"jelly_fish.png",
+	"kbugbuster.png",
+	"penguin.png",
+	"pig.png"
+}
