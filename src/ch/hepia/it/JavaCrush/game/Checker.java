@@ -17,12 +17,14 @@ public class Checker extends Thread {
 
 	@Override
 	public void run () {
-		while(true){
-			boardCheck();
-		}
+		//TODO replace with other variables from timer, or main, so we can then join cleanly
+		//TODO find a way to get the score cleanly permanently, or at least at the end (with the join)
+		while (true) boardCheck();
 	}
 
-	public void boardCheck(){
+	public synchronized void boardCheck(){
+		//TODO add scoring
+		//TODO launch replacement threads at end of each check??
 		int cnt = 0;
 		int lastVal = -1;
 

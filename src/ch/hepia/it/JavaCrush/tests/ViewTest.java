@@ -10,13 +10,6 @@ import java.awt.*;
 public class ViewTest {
 	public static void main (String[] args) {
 		int size = 10;
-		int max = 10;
-		Board b = Board.generateRandomBoard(size,max);
-		System.out.println(b);
-		JFrame frame = new JFrame();
-		Checker[] checks = new Checker[size*size];
-
-
 		String[] assets = {
 				"assets/bird.png",
 				"assets/cat.png",
@@ -30,6 +23,13 @@ public class ViewTest {
 				"assets/penguin.png",
 				"assets/pig.png"
 		};
+		int max = assets.length;
+		Board b = Board.generateRandomBoard(size,max);
+		System.out.println(b);
+		JFrame frame = new JFrame();
+		Checker[] checks = new Checker[size*size];
+
+
 
 		CrushView view = new CrushView(assets,size,b);
 
