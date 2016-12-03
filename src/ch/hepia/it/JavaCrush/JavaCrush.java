@@ -34,13 +34,16 @@ public class JavaCrush {
 		Board b = Board.generateRandomBoard(size,max, seed);
 		System.out.println(b);
 		JFrame frame = new JFrame();
-		CrushView view = new CrushView(assets,size,b);
+		Boolean checkingH = false;
+		Boolean checkingV = false;
+		Boolean effect = false;
+		CrushView view = new CrushView(assets,size,b, checkingH, checkingV, effect);
 		Lock lock = new ReentrantLock();
 		Mover mover = new Mover(b,view, lock);
 		Integer score = 0;
 
-		Checker lineChecker = new Checker(true,b,view, score, lock);
-		Checker colChecker = new Checker(false,b,view, score, lock);
+		Checker lineChecker = new Checker(true,b,view, score, lock, checkingH, checkingV, effect);
+		Checker colChecker = new Checker(false,b,view, score, lock, checkingH, checkingV, effect);
 		lineChecker.start();
 		colChecker.start();
 		mover.start();

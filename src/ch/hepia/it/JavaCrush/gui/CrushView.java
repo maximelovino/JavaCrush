@@ -11,13 +11,19 @@ public class CrushView extends JPanel {
 	private final int size;
 	private JButton[] buttons;
 	private Board game;
-	int firstCase = -1;
+	private int firstCase = -1;
+	private Boolean checkingH, checkingV;
+	private Boolean effect;
 
-	public CrushView (String[] assets, int size, Board game) {
+
+	public CrushView (String[] assets, int size, Board game, Boolean checkingH, Boolean checkingV, Boolean effect) {
 		super(new GridLayout(size, size));
 		this.assets = assets;
 		this.size = size;
 		this.game = game;
+		this.checkingH = checkingH;
+		this.checkingV = checkingV;
+		this.effect = effect;
 		this.buttons = new JButton[this.size * this.size];
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new JButton();
@@ -30,9 +36,16 @@ public class CrushView extends JPanel {
 				} else {
 					int temp = Integer.valueOf(src.getName());
 					if ((temp == firstCase - 1 && firstCase % size != 0) || (temp == firstCase + 1 && firstCase % size != size - 1) || temp == firstCase - 10 || temp == firstCase + 10) {
+						this.checkingH = this.checkingV = true;
 						this.game.swap(firstCase, temp);
 						System.out.println("swapped " + temp + " with " + firstCase);
 						syncButtonsWithGame();
+						while (checkingH && checkingV) {}
+						if (!effect){
+							this.game.swap(firstCase,temp);
+							System.out.println("useless change was swapped");
+							syncButtonsWithGame();
+						}
 					}
 					firstCase = -1;
 				}
