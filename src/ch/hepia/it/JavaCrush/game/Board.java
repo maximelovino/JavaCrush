@@ -5,18 +5,21 @@ import java.util.Random;
 public class Board {
 	private int[][] board;
 	private int size;
-	private static Random rnd = new Random(42);
+	private static Random rnd = new Random();
+	private int range;
 
 	public static Random getRnd () {
 		return rnd;
 	}
 
-	public Board (int size) {
+	public Board (int size, int range) {
 		this.size = size;
+		this.range = range;
 		this.board = new int[size][size];
 	}
 
-	public Board (int[] board) {
+	public Board (int[] board, int range) {
+		this.range = range;
 		this.size = (int) Math.sqrt(board.length);
 		for (int i = 0; i < board.length; i++) {
 			this.board[i / this.size][i % this.size] = board[i];
@@ -24,6 +27,7 @@ public class Board {
 	}
 
 	public Board (Board b) {
+		this.range = b.range;
 		this.size = b.size;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -32,11 +36,13 @@ public class Board {
 		}
 	}
 
-	public static Board generateRandomBoard (int size, int maxRandom) {
-		Board b = new Board(size);
-
+	public static Board generateRandomBoard (int size, int range, Integer seed) {
+		Board b = new Board(size, range);
+		if (seed != null){
+			rnd.setSeed(seed);
+		}
 		for (int i = 0; i < size * size; i++) {
-			b.setCase(i, rnd.nextInt(maxRandom));
+			b.setCase(i, rnd.nextInt(range));
 		}
 
 		return b;
@@ -58,6 +64,14 @@ public class Board {
 
 	public void setCase (int line, int col, int value) {
 		this.board[line][col] = value;
+	}
+
+	public void setRandomCase(int index){
+		this.setCase(index,rnd.nextInt(this.range));
+	}
+
+	public void setRandomCase(int line,int col){
+		this.setCase(line,col,rnd.nextInt(this.range));
 	}
 
 	public int getCase (int index) {

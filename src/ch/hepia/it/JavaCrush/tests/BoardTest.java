@@ -5,7 +5,7 @@ import ch.hepia.it.JavaCrush.game.Board;
 public class BoardTest {
 	public static void main (String[] args) {
 
-		Board b = Board.generateRandomBoard(10,10);
+		Board b = Board.generateRandomBoard(10,10,42);
 		System.out.println(b);
 		b.destroyCase(5,0);
 		//b.destroyCase(6,0);
