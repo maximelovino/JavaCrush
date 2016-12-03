@@ -1,85 +1,42 @@
 package ch.hepia.it.JavaCrush.gui;
 
 import ch.hepia.it.JavaCrush.game.Board;
-import ch.hepia.it.JavaCrush.game.Checker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class CrushView extends JPanel {
-	private static final String[] images = {
-			"bird.png",
-			"cat.png",
-			"cricket.png",
-			"dolphin.png",
-			"dragon_fly.png",
-			"elephant.png",
-			"gnome_panel_fish.png",
-			"jelly_fish.png",
-			"kbugbuster.png",
-			"penguin.png",
-			"pig.png"
-	};
+public class CrushView extends JPanel{
 
-	private static final int SIZE = 10;
-	private JButton[] buttons = new JButton[SIZE*SIZE];
+	private final String[] assets;
+	private final int size;
+	private JButton[] buttons;
 	private Board game;
-	int clickedFirst = -1;
-	Random rnd;
 
-	public CrushView (Random rnd) {
-		super(new GridLayout(SIZE,SIZE));
-		this.game = new Board(SIZE);
-		this.rnd = rnd;
+	public CrushView (String[] assets, int size, Board game) {
+		super(new GridLayout(size,size));
+		this.assets = assets;
+		this.size = size;
+		this.game = game;
+		this.buttons = new JButton[this.size * this.size];
 		for (int i = 0; i < buttons.length; i++) {
-			int random = rnd.nextInt(images.length);
-			this.game.setCase(random,i);
-			buttons[i] = new JButton(new ImageIcon(new ImageIcon("assets/"+images[random]).getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT)));
+			buttons[i] = new JButton();
 			buttons[i].setName(String.valueOf(i));
 			buttons[i].addActionListener(e -> {
-				JButton source = (JButton) e.getSource();
-				int score = 0;
-				if (clickedFirst == -1){
-					clickedFirst = Integer.valueOf(source.getName());
-				}else{
-					Checker[] workerThreads = new Checker[SIZE *2];
-					int secondClick = Integer.valueOf(source.getName());
-					//TODO check with mods if we're on far left or far right
-					//TODO perhaps do check in swap function
-					if (secondClick == clickedFirst + 1 || secondClick == clickedFirst -1 || secondClick == clickedFirst + SIZE || secondClick == clickedFirst - SIZE){
-						swapTwoButtons(clickedFirst, secondClick);
-						for (int j = 0; j < SIZE; j++) {
-							workerThreads[j] = new Checker(j,-1,this.game, this);
-							workerThreads[j+SIZE] = new Checker(-1,j,this.game, this);
-							workerThreads[j].start();
-							workerThreads[j+SIZE].start();
-						}
-						for (int j = 0; j < SIZE; j++) {
-							try {
-								workerThreads[j].join();
-								workerThreads[j+SIZE].join();
-								score += workerThreads[j].getScore();
-								score += workerThreads[j+SIZE].getScore();
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-					System.out.println(score);
-					clickedFirst = -1;
-				}
+				JButton src = (JButton) e.getSource();
+				System.out.println(src.getName());
 			});
 			this.add(buttons[i]);
 		}
+		syncButtonsWithGame();
+
 	}
 
-	private void swapTwoButtons(int a, int b){
-		ImageIcon iconA = (ImageIcon) buttons[a].getIcon();
-		ImageIcon iconB = (ImageIcon) buttons[b].getIcon();
-		buttons[b].setIcon(iconA);
-		buttons[a].setIcon(iconB);
-		this.game.swap(a,b);
-		this.update(this.getGraphics());
+	public void syncButtonsWithGame(){
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].setIcon(new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT)));
+		}
+		update(this.getGraphics());
 	}
 }
