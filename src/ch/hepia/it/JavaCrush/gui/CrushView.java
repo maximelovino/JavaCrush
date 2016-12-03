@@ -13,6 +13,7 @@ public class CrushView extends JPanel{
 	private final int size;
 	private JButton[] buttons;
 	private Board game;
+	int firstCase = -1;
 
 	public CrushView (String[] assets, int size, Board game) {
 		super(new GridLayout(size,size));
@@ -25,7 +26,16 @@ public class CrushView extends JPanel{
 			buttons[i].setName(String.valueOf(i));
 			buttons[i].addActionListener(e -> {
 				JButton src = (JButton) e.getSource();
-				System.out.println(src.getName());
+
+				if (firstCase == -1){
+					firstCase = Integer.valueOf(src.getName());
+				}else{
+					int temp = Integer.valueOf(src.getName());
+					this.game.swap(firstCase,temp);
+					System.out.println("swapped "+temp+" with "+ firstCase);
+					syncButtonsWithGame();
+					firstCase = -1;
+				}
 			});
 			this.add(buttons[i]);
 		}
@@ -35,7 +45,9 @@ public class CrushView extends JPanel{
 
 	public void syncButtonsWithGame(){
 		for (int i = 0; i < buttons.length; i++) {
-			buttons[i].setIcon(new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT)));
+			int val = this.game.getCase(i);
+			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT));
+			buttons[i].setIcon(icn);
 		}
 		update(this.getGraphics());
 	}
