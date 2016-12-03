@@ -1,38 +1,106 @@
 package ch.hepia.it.JavaCrush.game;
 
+import java.util.Random;
+
 public class Board {
-	private int[] board;
+	private int[][] board;
 	private int size;
+	private static Random rnd = new Random();
+
+	public static Random getRnd () {
+		return rnd;
+	}
 
 	public Board (int size) {
 		this.size = size;
-		this.board = new int[size*size];
+		this.board = new int[size][size];
 	}
 
 	public Board (int[] board) {
 		this.size = (int) Math.sqrt(board.length);
-		this.board = board;
+		for (int i = 0; i < board.length; i++) {
+			this.board[i / this.size][i % this.size] = board[i];
+		}
 	}
 
-	public void swap (int a, int b){
-		int temp = board[a];
-		board[a] = board[b];
-		board[b] = temp;
+	public Board (Board b) {
+		this.size = b.size;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				this.board[i][j] = b.board[i][j];
+			}
+		}
 	}
 
-	public void setCase (int value, int index){
-		board[index] = value;
+	public static Board generateRandomBoard (int size, int maxRandom) {
+		Board b = new Board(size);
+
+		for (int i = 0; i < size * size; i++) {
+			b.setCase(i, rnd.nextInt(maxRandom));
+		}
+
+		return b;
 	}
 
-	public int getCase (int index){
-		return board[index];
+	public void swap (int firstCase, int secondCase) {
+		swap(firstCase / this.size, firstCase % this.size, secondCase / this.size, secondCase % this.size);
 	}
 
-	public int[] getBoard () {
+	public void swap (int firstCaseLine, int firstCaseColumn, int secondCaseLine, int secondCaseColumn) {
+		int temp = this.board[firstCaseLine][firstCaseColumn];
+		this.board[firstCaseLine][firstCaseColumn] = this.board[secondCaseLine][secondCaseColumn];
+		this.board[secondCaseLine][secondCaseColumn] = temp;
+	}
+
+	public void setCase (int index, int value) {
+		setCase(index / this.size, index % this.size, value);
+	}
+
+	public void setCase (int line, int col, int value) {
+		this.board[line][col] = value;
+	}
+
+	public int getCase (int index) {
+		return getCase(index / this.size, index % this.size);
+	}
+
+	public int getCase (int line, int col) {
+		return board[line][col];
+	}
+
+	public int[][] getBoard () {
 		return board;
 	}
 
 	public int getSize () {
 		return size;
+	}
+
+	public boolean isEmpty (int index) {
+		return isEmpty(index / this.size, index % this.size);
+	}
+
+	public boolean isEmpty (int line, int col) {
+		return this.board[line][col] == -1;
+	}
+
+	public void destroyCase (int index) {
+		this.setCase(index, -1);
+	}
+
+	public void destroyCase (int line, int column) {
+		this.setCase(line, column, -1);
+	}
+
+	@Override
+	public String toString () {
+		String st = "";
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				st += board[i][j] + "\t";
+			}
+			st += "\n";
+		}
+		return st;
 	}
 }

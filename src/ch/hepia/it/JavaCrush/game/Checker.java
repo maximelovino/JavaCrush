@@ -1,20 +1,27 @@
 package ch.hepia.it.JavaCrush.game;
 
+import ch.hepia.it.JavaCrush.gui.CrushView;
+
+import java.util.ArrayList;
+
 public class Checker extends Thread {
 	private int lineToCheck;
 	private int colToCheck;
 	private Board game;
+	private CrushView view;
 	private int score = 0;
 
-	public Checker (int lineToCheck, int colToCheck, Board game) {
+	public Checker (int lineToCheck, int colToCheck, Board game, CrushView view) {
 		super();
 		this.lineToCheck = lineToCheck;
 		this.colToCheck = colToCheck;
 		this.game = game;
+		this.view = view;
 	}
 
 	@Override
 	public void run () {
+		ArrayList<Integer> toDel = new ArrayList<>();
 		int cnt = 0;
 		int lastType = -1;
 		int size = this.game.getSize();

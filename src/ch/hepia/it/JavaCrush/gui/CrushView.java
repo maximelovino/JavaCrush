@@ -5,8 +5,6 @@ import ch.hepia.it.JavaCrush.game.Checker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class CrushView extends JPanel {
@@ -32,7 +30,6 @@ public class CrushView extends JPanel {
 
 	public CrushView (Random rnd) {
 		super(new GridLayout(SIZE,SIZE));
-		System.out.println(images.length);
 		this.game = new Board(SIZE);
 		this.rnd = rnd;
 		for (int i = 0; i < buttons.length; i++) {
@@ -42,21 +39,19 @@ public class CrushView extends JPanel {
 			buttons[i].setName(String.valueOf(i));
 			buttons[i].addActionListener(e -> {
 				JButton source = (JButton) e.getSource();
-				System.out.println(source.getName());
 				int score = 0;
-				Checker[] workerThreads = new Checker[SIZE *2];
 				if (clickedFirst == -1){
 					clickedFirst = Integer.valueOf(source.getName());
 				}else{
-					System.out.println("it's the second one");
+					Checker[] workerThreads = new Checker[SIZE *2];
 					int secondClick = Integer.valueOf(source.getName());
 					//TODO check with mods if we're on far left or far right
 					//TODO perhaps do check in swap function
 					if (secondClick == clickedFirst + 1 || secondClick == clickedFirst -1 || secondClick == clickedFirst + SIZE || secondClick == clickedFirst - SIZE){
 						swapTwoButtons(clickedFirst, secondClick);
 						for (int j = 0; j < SIZE; j++) {
-							workerThreads[j] = new Checker(j,-1,this.game);
-							workerThreads[j+SIZE] = new Checker(-1,j,this.game);
+							workerThreads[j] = new Checker(j,-1,this.game, this);
+							workerThreads[j+SIZE] = new Checker(-1,j,this.game, this);
 							workerThreads[j].start();
 							workerThreads[j+SIZE].start();
 						}
@@ -80,7 +75,6 @@ public class CrushView extends JPanel {
 	}
 
 	private void swapTwoButtons(int a, int b){
-		System.out.println("swapping");
 		ImageIcon iconA = (ImageIcon) buttons[a].getIcon();
 		ImageIcon iconB = (ImageIcon) buttons[b].getIcon();
 		buttons[b].setIcon(iconA);
