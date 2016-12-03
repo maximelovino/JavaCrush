@@ -5,7 +5,7 @@ import java.util.Random;
 public class Board {
 	private int[][] board;
 	private int size;
-	private static Random rnd = new Random();
+	private static Random rnd = new Random(42);
 
 	public static Random getRnd () {
 		return rnd;
