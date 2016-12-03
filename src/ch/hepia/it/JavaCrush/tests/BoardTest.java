@@ -7,8 +7,19 @@ public class BoardTest {
 
 		Board b = Board.generateRandomBoard(10,10);
 		System.out.println(b);
-		b.destroyCase(3);
-		System.out.println(b.isEmpty(3));
+		b.destroyCase(5,0);
+		//b.destroyCase(6,0);
+		b.destroyCase(7,0);
+		System.out.println(b);
+
+		int emptyCnt = 0;
+		for (int i = b.getSize() - 1; i >= 0 ; i--) {
+			if (b.getCase(i,0) == -1){
+				emptyCnt ++;
+			}else{
+				b.swap(i,0,i+emptyCnt,0);
+			}
+		}
 		System.out.println(b);
 	}
 }

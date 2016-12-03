@@ -2,6 +2,7 @@ package ch.hepia.it.JavaCrush.tests;
 
 import ch.hepia.it.JavaCrush.game.Board;
 import ch.hepia.it.JavaCrush.game.Checker;
+import ch.hepia.it.JavaCrush.game.Mover;
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
 import javax.swing.*;
@@ -27,18 +28,18 @@ public class ViewTest {
 		Board b = Board.generateRandomBoard(size,max);
 		System.out.println(b);
 		JFrame frame = new JFrame();
-		Checker[] checks = new Checker[size*size];
-
-
-
 		CrushView view = new CrushView(assets,size,b);
+		Mover[] movers = new Mover[size];
+
+
+		Checker lineChecker = new Checker(true,b,view);
+		Checker colChecker = new Checker(false,b,view);
+		lineChecker.start();
+		colChecker.start();
 
 		for (int i = 0; i < size; i++) {
-			checks[i] = new Checker(i,true,b, view);
-			checks[i+size] = new Checker(i,false,b, view);
-
-			checks[i].start();
-			checks[i+size].start();
+			movers[i] = new Mover(b,i,view);
+			movers[i].start();
 		}
 
 		frame.add(view);

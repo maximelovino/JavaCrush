@@ -4,10 +4,8 @@ import ch.hepia.it.JavaCrush.game.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class CrushView extends JPanel{
+public class CrushView extends JPanel {
 
 	private final String[] assets;
 	private final int size;
@@ -16,7 +14,7 @@ public class CrushView extends JPanel{
 	int firstCase = -1;
 
 	public CrushView (String[] assets, int size, Board game) {
-		super(new GridLayout(size,size));
+		super(new GridLayout(size, size));
 		this.assets = assets;
 		this.size = size;
 		this.game = game;
@@ -27,13 +25,15 @@ public class CrushView extends JPanel{
 			buttons[i].addActionListener(e -> {
 				JButton src = (JButton) e.getSource();
 
-				if (firstCase == -1){
+				if (firstCase == -1) {
 					firstCase = Integer.valueOf(src.getName());
-				}else{
+				} else {
 					int temp = Integer.valueOf(src.getName());
-					this.game.swap(firstCase,temp);
-					System.out.println("swapped "+temp+" with "+ firstCase);
-					syncButtonsWithGame();
+					if ((temp == firstCase - 1 && firstCase % size != 0) || (temp == firstCase + 1 && firstCase % size != size - 1) || temp == firstCase - 10 || temp == firstCase + 10) {
+						this.game.swap(firstCase, temp);
+						System.out.println("swapped " + temp + " with " + firstCase);
+						syncButtonsWithGame();
+					}
 					firstCase = -1;
 				}
 			});
@@ -43,10 +43,10 @@ public class CrushView extends JPanel{
 
 	}
 
-	public void syncButtonsWithGame(){
+	public void syncButtonsWithGame () {
 		for (int i = 0; i < buttons.length; i++) {
 			int val = this.game.getCase(i);
-			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT));
+			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
 			buttons[i].setIcon(icn);
 		}
 		update(this.getGraphics());
