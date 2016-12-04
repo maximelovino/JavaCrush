@@ -4,23 +4,26 @@ import ch.hepia.it.JavaCrush.game.Board;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.locks.Lock;
 
 public class CrushView extends JPanel {
 
-	private final String[] assets;
+	private final Assets assets;
 	private final int size;
 	private JButton[] buttons;
 	private Board game;
 	private int firstCase = -1;
+	private Lock lock;
 	private Boolean checkingH, checkingV;
 	private Boolean effect;
 
 
-	public CrushView (String[] assets, int size, Board game, Boolean checkingH, Boolean checkingV, Boolean effect) {
+	public CrushView (Assets assets, int size, Board game, Lock lock, Boolean checkingH, Boolean checkingV, Boolean effect) {
 		super(new GridLayout(size, size));
 		this.assets = assets;
 		this.size = size;
 		this.game = game;
+		this.lock = lock;
 		this.checkingH = checkingH;
 		this.checkingV = checkingV;
 		this.effect = effect;
@@ -36,19 +39,24 @@ public class CrushView extends JPanel {
 				} else {
 					int temp = Integer.valueOf(src.getName());
 					if ((temp == firstCase - 1 && firstCase % size != 0) || (temp == firstCase + 1 && firstCase % size != size - 1) || temp == firstCase - 10 || temp == firstCase + 10) {
-						this.checkingH = this.checkingV = true;
-						this.effect = false;
+						this.lock.lock();
 						this.game.swap(firstCase, temp);
 						System.out.println("swapped " + temp + " with " + firstCase);
 						syncButtonsWithGame(firstCase,temp);
-						while (checkingH && checkingV) {}
-						//check why we enter anyway
+						this.checkingH = this.checkingV = true;
+						this.effect = false;
+						this.lock.unlock();
+/*						while (checkingH && checkingV) {}
+						//TODO recheck all this, there is a problem
+						//TODO problem is here
 						if (!effect){
 							System.out.println("NO");
+							lock.lock();
 							this.game.swap(firstCase,temp);
+							lock.unlock();
 							System.out.println("useless change was swapped");
 							syncButtonsWithGame(firstCase,temp);
-						}
+						}*/
 					}
 					firstCase = -1;
 				}
@@ -63,7 +71,7 @@ public class CrushView extends JPanel {
 		for (int i = 0; i < buttons.length; i++) {
 			int val = this.game.getCase(i);
 			//TODO change this with collection of icons already made
-			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[val]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+			ImageIcon icn = val == -1 ? new ImageIcon() : (ImageIcon) assets.get(val);
 			buttons[i].setIcon(icn);
 		}
 		update(this.getGraphics());
@@ -72,7 +80,7 @@ public class CrushView extends JPanel {
 	public void syncButtonsWithGame (int... ids){
 		for (int b : ids) {
 			int val = this.game.getCase(b);
-			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[val]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+			ImageIcon icn = val == -1 ? new ImageIcon() : (ImageIcon) assets.get(val);
 			buttons[b].setIcon(icn);
 		}
 		update(this.getGraphics());
