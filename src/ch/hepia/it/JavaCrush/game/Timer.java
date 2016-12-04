@@ -1,10 +1,12 @@
 package ch.hepia.it.JavaCrush.game;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Timer extends Thread {
 	private int time;
-	private Boolean running;
+	private AtomicBoolean running;
 
-	public Timer (int time, Boolean running) {
+	public Timer (int time, AtomicBoolean running) {
 		this.time = time;
 		this.running = running;
 	}
@@ -16,6 +18,7 @@ public class Timer extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		running = false;
+		System.out.println("timer done");
+		running.set(false);
 	}
 }

@@ -4,6 +4,7 @@ import ch.hepia.it.JavaCrush.game.Board;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
 public class CrushView extends JPanel {
@@ -14,11 +15,12 @@ public class CrushView extends JPanel {
 	private Board game;
 	private int firstCase = -1;
 	private Lock lock;
-	private Boolean checkingH, checkingV;
-	private Boolean effect;
+	private AtomicBoolean checkingH;
+	private AtomicBoolean checkingV;
+	private AtomicBoolean effect;
 
 
-	public CrushView (Assets assets, int size, Board game, Lock lock, Boolean checkingH, Boolean checkingV, Boolean effect) {
+	public CrushView (Assets assets, int size, Board game, Lock lock, AtomicBoolean checkingH, AtomicBoolean checkingV, AtomicBoolean effect) {
 		super(new GridLayout(size, size));
 		this.assets = assets;
 		this.size = size;
@@ -43,13 +45,13 @@ public class CrushView extends JPanel {
 						this.game.swap(firstCase, temp);
 						System.out.println("swapped " + temp + " with " + firstCase);
 						syncButtonsWithGame(firstCase,temp);
-						this.checkingH = this.checkingV = true;
-						this.effect = false;
+						this.checkingH.set(true);
+						this.effect.set(false);
 						this.lock.unlock();
-/*						while (checkingH && checkingV) {}
+/*						while (this.checkingH.get() && this.checkingV.get()) {}
 						//TODO recheck all this, there is a problem
 						//TODO problem is here
-						if (!effect){
+						if (!this.effect.get()){
 							System.out.println("NO");
 							lock.lock();
 							this.game.swap(firstCase,temp);

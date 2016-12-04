@@ -1,13 +1,14 @@
 package ch.hepia.it.JavaCrush;
 
-import ch.hepia.it.JavaCrush.game.Board;
-import ch.hepia.it.JavaCrush.game.Checker;
-import ch.hepia.it.JavaCrush.game.Mover;
+import ch.hepia.it.JavaCrush.game.*;
+import ch.hepia.it.JavaCrush.game.Timer;
 import ch.hepia.it.JavaCrush.gui.Assets;
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -23,24 +24,47 @@ public class JavaCrush {
 		}
 		Board b = Board.generateRandomBoard(size,max, seed);
 		System.out.println(b);
-		JFrame frame = new JFrame();
-		Boolean checkingH = false;
-		Boolean checkingV = false;
-		Boolean effect = false;
+		JFrame frame = new JFrame("JavaCrush");
+		AtomicBoolean checkingH = new AtomicBoolean(false);
+		AtomicBoolean checkingV = new AtomicBoolean(false);
+		AtomicBoolean effect = new AtomicBoolean(false);
+		AtomicBoolean running = new AtomicBoolean(true);
 		Lock lock = new ReentrantLock();
 		CrushView view = new CrushView(assets,size,b, lock, checkingH, checkingV, effect);
-		Mover mover = new Mover(b,view, lock);
-		Integer score = 0;
+		Timer timer = new Timer(30,running);
+		Mover mover = new Mover(b,view, lock, running);
+		AtomicInteger score = new AtomicInteger(0);
 
-		Checker lineChecker = new Checker(true,b,view, score, lock, checkingH, checkingV, effect);
-		Checker colChecker = new Checker(false,b,view, score, lock, checkingH, checkingV, effect);
+		Checker lineChecker = new Checker(true,b,view, score, lock, checkingH, checkingV, effect, running);
+		Checker colChecker = new Checker(false,b,view, score, lock, checkingH, checkingV, effect, running);
 		lineChecker.start();
 		colChecker.start();
 		mover.start();
+		timer.start();
+
 
 		frame.add(view);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(new Dimension(800,800));
 		frame.setVisible(true);
+
+		try {
+			timer.join();
+			System.out.println("timer joined");
+			mover.join();
+			System.out.println("mover joined");
+			colChecker.join();
+			System.out.println("col checker joined");
+			lineChecker.join();
+			System.out.println("Joined everything");
+			System.out.println("score "+score);
+			JFrame popup = new JFrame("Score");
+			popup.add(new JTextArea("Your score is "+score));
+			popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			popup.setSize(new Dimension(200,200));
+			popup.setVisible(true);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

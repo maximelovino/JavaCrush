@@ -2,22 +2,25 @@ package ch.hepia.it.JavaCrush.game;
 
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
 public class Mover extends Thread{
 	private Board b;
 	private CrushView view;
 	private Lock lock;
+	private AtomicBoolean running;
 
-	public Mover (Board b, CrushView view, Lock lock) {
+	public Mover (Board b, CrushView view, Lock lock, AtomicBoolean running) {
 		this.b = b;
 		this.view = view;
 		this.lock = lock;
+		this.running = running;
 	}
 
 	@Override
 	public void run () {
-		while(true) {
+		while(running.get()) {
 			this.lock.lock();
 			move();
 			this.lock.unlock();

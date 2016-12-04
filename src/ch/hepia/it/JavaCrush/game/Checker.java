@@ -2,18 +2,21 @@ package ch.hepia.it.JavaCrush.game;
 
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 public class Checker extends Thread {
 	private boolean line;
 	private Board b;
 	private CrushView view;
-	private Integer score;
+	private AtomicInteger score;
 	private Lock lock;
-	private Boolean checkingH, checkingV;
-	private Boolean effect;
+	private AtomicBoolean checkingH, checkingV;
+	private AtomicBoolean effect;
+	private AtomicBoolean running;
 
-	public Checker (boolean line, Board b, CrushView view, Integer score, Lock lock, Boolean checkingH, Boolean checkingV, Boolean effect) {
+	public Checker (boolean line, Board b, CrushView view, AtomicInteger score, Lock lock, AtomicBoolean checkingH, AtomicBoolean checkingV, AtomicBoolean effect, AtomicBoolean running) {
 		this.line = line;
 		this.b = b;
 		this.view = view;
@@ -22,17 +25,18 @@ public class Checker extends Thread {
 		this.checkingH = checkingH;
 		this.checkingV = checkingV;
 		this.effect = effect;
+		this.running = running;
 	}
 
 	@Override
 	public void run () {
 		//TODO replace with other variables from timer, or main, so we can then join cleanly
 		//TODO find a way to get the score cleanly permanently, or at least at the end (with the join)
-		while (true) {
+		while (running.get()) {
 			this.lock.lock();
 			boardCheck();
-			if (line) checkingH = false;
-			else checkingV = false;
+			if (line) checkingH.set(false);
+			else checkingV.set(false);
 			this.lock.unlock();
 		}
 	}
@@ -48,8 +52,10 @@ public class Checker extends Thread {
 					cnt++;
 					if (i == this.b.getSize() - 1) {
 						if (cnt >= 3) {
+							int toAdd = cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
+							score.addAndGet(toAdd);
 							System.out.println("found something at " + i);
-							effect = true;
+							effect.set(true);
 							for (int j = 0; j < cnt; j++) {
 								int idx = i - j;
 								int toSync;
@@ -68,9 +74,10 @@ public class Checker extends Thread {
 				} else {
 					if (cnt >= 3) {
 						System.out.println("found something at " + i);
-						effect = true;
+						effect.set(true);
 						//50 pour 3 cases identiques alignées, 150 pour 4 et 400 pour 5
-						score += cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
+						int toAdd = cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
+						score.addAndGet(toAdd);
 						for (int j = 1; j <= cnt; j++) {
 							int idx = i - j;
 							int toSync;
@@ -92,7 +99,7 @@ public class Checker extends Thread {
 		}
 	}
 
-	public Integer getScore () {
+	public AtomicInteger getScore () {
 		return score;
 	}
 }
