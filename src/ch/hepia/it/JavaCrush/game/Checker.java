@@ -52,13 +52,16 @@ public class Checker extends Thread {
 							effect = true;
 							for (int j = 0; j < cnt; j++) {
 								int idx = i - j;
+								int toSync;
 								System.out.println("deleting " + idx);
 								if (line) {
 									this.b.destroyCase(toCheck, idx);
+									toSync = toCheck * this.b.getSize() + idx;
 								} else {
 									this.b.destroyCase(idx, toCheck);
+									toSync = idx * this.b.getSize() + toCheck;
 								}
-								view.syncButtonsWithGame();
+								view.syncButtonsWithGame(toSync);
 							}
 						}
 					}
@@ -70,13 +73,16 @@ public class Checker extends Thread {
 						score += cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
 						for (int j = 1; j <= cnt; j++) {
 							int idx = i - j;
+							int toSync;
 							System.out.println("deleting " + idx);
 							if (line) {
 								this.b.destroyCase(toCheck, idx);
+								toSync = toCheck * this.b.getSize() + idx;
 							} else {
 								this.b.destroyCase(idx, toCheck);
+								toSync = idx * this.b.getSize() + toCheck;
 							}
-							view.syncButtonsWithGame();
+							view.syncButtonsWithGame(toSync);
 						}
 					}
 					lastVal = val;
@@ -84,5 +90,9 @@ public class Checker extends Thread {
 				}
 			}
 		}
+	}
+
+	public Integer getScore () {
+		return score;
 	}
 }

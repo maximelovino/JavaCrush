@@ -36,13 +36,13 @@ public class Mover extends Thread{
 				}else{
 					if (emptyCnt > 0){
 						this.b.swap(i,col,i+emptyCnt,col);
-						view.syncButtonsWithGame();
+						view.syncButtonsWithGame(i * this.b.getSize() + col, (i + emptyCnt) * this.b.getSize() + col);
 					}
 				}
 			}
 			for (int j = 0; j < emptyCnt; j++) {
 				this.b.setRandomCase(j,col);
-				view.syncButtonsWithGame();
+				view.syncButtonsWithGame(j * this.b.getSize() + col);
 			}
 		}
 	}

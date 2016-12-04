@@ -37,14 +37,17 @@ public class CrushView extends JPanel {
 					int temp = Integer.valueOf(src.getName());
 					if ((temp == firstCase - 1 && firstCase % size != 0) || (temp == firstCase + 1 && firstCase % size != size - 1) || temp == firstCase - 10 || temp == firstCase + 10) {
 						this.checkingH = this.checkingV = true;
+						this.effect = false;
 						this.game.swap(firstCase, temp);
 						System.out.println("swapped " + temp + " with " + firstCase);
-						syncButtonsWithGame();
+						syncButtonsWithGame(firstCase,temp);
 						while (checkingH && checkingV) {}
+						//check why we enter anyway
 						if (!effect){
+							System.out.println("NO");
 							this.game.swap(firstCase,temp);
 							System.out.println("useless change was swapped");
-							syncButtonsWithGame();
+							syncButtonsWithGame(firstCase,temp);
 						}
 					}
 					firstCase = -1;
@@ -59,8 +62,18 @@ public class CrushView extends JPanel {
 	public void syncButtonsWithGame () {
 		for (int i = 0; i < buttons.length; i++) {
 			int val = this.game.getCase(i);
-			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[this.game.getCase(i)]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+			//TODO change this with collection of icons already made
+			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[val]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
 			buttons[i].setIcon(icn);
+		}
+		update(this.getGraphics());
+	}
+
+	public void syncButtonsWithGame (int... ids){
+		for (int b : ids) {
+			int val = this.game.getCase(b);
+			ImageIcon icn = val == -1 ? new ImageIcon() : new ImageIcon(new ImageIcon(assets[val]).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+			buttons[b].setIcon(icn);
 		}
 		update(this.getGraphics());
 	}
