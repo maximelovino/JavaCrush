@@ -4,6 +4,7 @@ import ch.hepia.it.JavaCrush.game.*;
 import ch.hepia.it.JavaCrush.game.Timer;
 import ch.hepia.it.JavaCrush.gui.Assets;
 import ch.hepia.it.JavaCrush.gui.CrushView;
+import ch.hepia.it.JavaCrush.gui.ScoreView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class JavaCrush {
 		AtomicBoolean running = new AtomicBoolean(true);
 		Lock lock = new ReentrantLock();
 		CrushView view = new CrushView(assets,size,b, lock, checkingH, checkingV, effect);
-		Timer timer = new Timer(30,running);
+		Timer timer = new Timer(10,running);
 		Mover mover = new Mover(b,view, lock, running);
 		AtomicInteger score = new AtomicInteger(0);
 
@@ -58,11 +59,10 @@ public class JavaCrush {
 			lineChecker.join();
 			System.out.println("Joined everything");
 			System.out.println("score "+score);
-			JFrame popup = new JFrame("Score");
-			popup.add(new JTextArea("Your score is "+score));
-			popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			popup.setSize(new Dimension(200,200));
+			ScoreView popup = new ScoreView(score.get());
+			popup.setSize(new Dimension(400,400));
 			popup.setVisible(true);
+			popup.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
