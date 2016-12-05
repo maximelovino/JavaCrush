@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Assets {
 	private final ArrayList<Icon> icons;
 	private final String folderPath;
+	private final ImageIcon empty = new ImageIcon();
 
 	public Assets (String folderPath) {
 		this.icons = new ArrayList<>();
@@ -25,7 +26,7 @@ public class Assets {
 
 
 	public Icon get (int idx) {
-		return this.icons.get(idx);
+		return idx == -1 ? this.empty : this.icons.get(idx);
 	}
 
 	public int size () {

@@ -72,8 +72,7 @@ public class CrushView extends JPanel {
 	public void syncButtonsWithGame () {
 		for (int i = 0; i < buttons.length; i++) {
 			int val = this.game.getCase(i);
-			//TODO change this with collection of icons already made
-			ImageIcon icn = val == -1 ? new ImageIcon() : (ImageIcon) assets.get(val);
+			ImageIcon icn = (ImageIcon) assets.get(val);
 			buttons[i].setIcon(icn);
 		}
 		update(this.getGraphics());
@@ -82,7 +81,7 @@ public class CrushView extends JPanel {
 	public void syncButtonsWithGame (int... ids){
 		for (int b : ids) {
 			int val = this.game.getCase(b);
-			ImageIcon icn = val == -1 ? new ImageIcon() : (ImageIcon) assets.get(val);
+			ImageIcon icn = (ImageIcon) assets.get(val);
 			buttons[b].setIcon(icn);
 		}
 		update(this.getGraphics());
