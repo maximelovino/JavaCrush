@@ -2,6 +2,9 @@ package ch.hepia.it.JavaCrush.game;
 
 import java.util.Random;
 
+/**
+ * Model to represent the board of the game
+ */
 public class Board {
 	private int[][] board;
 	private int size;
@@ -98,10 +101,21 @@ public class Board {
 		return this.board[line][col] == -1;
 	}
 
+	/**
+	 * Method to set a case as destroyed (-1)
+	 *
+	 * @param index	A 1D coordinate of the case
+	 */
 	public void destroyCase (int index) {
 		this.setCase(index, -1);
 	}
 
+	/**
+	 * Method to set a case as destroyed (-1)
+	 *
+	 * @param line		The line of the case to destroy
+	 * @param column	The column of the case to destroy
+	 */
 	public void destroyCase (int line, int column) {
 		this.setCase(line, column, -1);
 	}

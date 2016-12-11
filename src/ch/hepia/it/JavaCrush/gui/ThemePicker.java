@@ -3,21 +3,17 @@ package ch.hepia.it.JavaCrush.gui;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ScoreView extends JDialog {
+public class ThemePicker extends JDialog {
 	private JPanel contentPane;
 	private JButton buttonOK;
 	private JButton buttonCancel;
-	private JTextArea TimeOver;
-	private JTextPane ScoreText;
+	private JComboBox themes;
 
-	public ScoreView (int score) {
+	public ThemePicker () {
 		setContentPane(contentPane);
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
-
-		//We set the score here
-		ScoreText.setText(String.valueOf(score));
-
+		//Insert all items (or list) inside jcombobox and write in a shared string the value picked
 		buttonOK.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e) {
 				onOK();
