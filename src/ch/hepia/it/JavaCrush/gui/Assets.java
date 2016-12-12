@@ -9,8 +9,10 @@ public class Assets {
 	private final ArrayList<Icon> icons;
 	private final String folderPath;
 	private final ImageIcon empty = new ImageIcon();
+	private final String name;
 
-	public Assets (String folderPath) {
+	public Assets (String folderPath, String name) {
+		this.name = name;
 		this.icons = new ArrayList<>();
 		this.folderPath = folderPath;
 		fillFromFolder();
@@ -31,5 +33,10 @@ public class Assets {
 
 	public int size () {
 		return icons.size();
+	}
+
+	@Override
+	public String toString () {
+		return name;
 	}
 }

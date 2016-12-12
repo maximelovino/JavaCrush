@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 
 public class CrushView extends JPanel {
 
-	private final Assets assets;
+	private Assets assets;
 	private final int size;
 	private JButton[] buttons;
 	private Board game;
@@ -85,5 +85,11 @@ public class CrushView extends JPanel {
 			buttons[b].setIcon(icn);
 		}
 		update(this.getGraphics());
+	}
+
+	public void setAssets(Assets a){
+		System.out.println("From size of "+assets.size()+" to size of "+a.size());
+		this.assets = a;
+		syncButtonsWithGame();
 	}
 }

@@ -9,6 +9,8 @@ import ch.hepia.it.JavaCrush.gui.CrushView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -17,10 +19,14 @@ import java.util.concurrent.locks.ReentrantLock;
 public class JavaCrush {
 	public static void main (String[] args) {
 		int size = 10;
-		String assetsPath = "assets";
-		Assets assets = new Assets(assetsPath);
-		int max = assets.size();
-		int seed = 42;
+		String assetsPath = "assets/basic";
+		Assets basicAssets = new Assets(assetsPath, "Basic");
+		ArrayList<Assets> assetsCollection = new ArrayList<>();
+		Assets ccAssets = new Assets("assets/cc","Creative Cloud");
+		assetsCollection.add(basicAssets);
+		assetsCollection.add(ccAssets);
+		int max = basicAssets.size();
+		int seed = 36;
 		if (args.length > 0){
 			seed = Integer.valueOf(args[0]);
 		}
@@ -34,7 +40,7 @@ public class JavaCrush {
 		AtomicBoolean effect = new AtomicBoolean(false);
 		AtomicBoolean running = new AtomicBoolean(true);
 		Lock lock = new ReentrantLock();
-		CrushView view = new CrushView(assets,size,b, lock, checkingH, checkingV, effect);
+		CrushView view = new CrushView(basicAssets,size,b, lock, checkingH, checkingV, effect);
 		final int TIME = 40;
 		JLabel timing = new JLabel(String.valueOf(TIME));
 		Timer timer = new Timer(TIME,running, timing);
@@ -53,6 +59,8 @@ public class JavaCrush {
 
 		JPanel header = new JPanel(new FlowLayout());
 		JButton shuffleButton = new JButton("Shuffle the board");
+		JComboBox<Assets> picker = new JComboBox<>(new Vector<>(assetsCollection));
+		header.add(picker);
 		header.add(shuffleButton);
 		header.add(timing);
 
@@ -61,6 +69,10 @@ public class JavaCrush {
 			b.shuffle();
 			view.syncButtonsWithGame();
 			lock.unlock();
+		});
+
+		picker.addActionListener(e -> {
+			view.setAssets((Assets)picker.getSelectedItem());
 		});
 
 
