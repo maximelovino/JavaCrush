@@ -56,7 +56,13 @@ public class JavaCrush {
 		header.add(shuffleButton);
 		header.add(timing);
 
-		
+		shuffleButton.addActionListener(e -> {
+			lock.lock();
+			b.shuffle();
+			view.syncButtonsWithGame();
+			lock.unlock();
+		});
+
 
 		frame.getContentPane().add(header,BorderLayout.PAGE_START);
 		frame.pack();

@@ -44,10 +44,7 @@ public class Board {
 		if (seed != null){
 			rnd.setSeed(seed);
 		}
-		for (int i = 0; i < size * size; i++) {
-			b.setCase(i, rnd.nextInt(range));
-		}
-
+		b.shuffle();
 		return b;
 	}
 
@@ -130,5 +127,11 @@ public class Board {
 			st += "\n";
 		}
 		return st;
+	}
+
+	public void shuffle() {
+		for (int i = 0; i < size * size; i++) {
+			this.setCase(i, rnd.nextInt(range));
+		}
 	}
 }
