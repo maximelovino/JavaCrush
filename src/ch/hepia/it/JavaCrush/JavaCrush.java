@@ -1,14 +1,14 @@
 package ch.hepia.it.JavaCrush;
 
-import ch.hepia.it.JavaCrush.game.*;
+import ch.hepia.it.JavaCrush.game.Board;
+import ch.hepia.it.JavaCrush.game.Checker;
+import ch.hepia.it.JavaCrush.game.Mover;
 import ch.hepia.it.JavaCrush.game.Timer;
 import ch.hepia.it.JavaCrush.gui.Assets;
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -80,10 +80,6 @@ public class JavaCrush {
 			System.out.println("Joined everything");
 			System.out.println("score "+score);
 			JOptionPane.showMessageDialog(frame,"Your score is "+score.get()+" points");
-//			ScoreView popup = new ScoreView(score.get());
-//			popup.setSize(new Dimension(400,400));
-//			popup.setVisible(true);
-//			popup.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
