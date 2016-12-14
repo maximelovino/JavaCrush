@@ -4,6 +4,7 @@ import ch.hepia.it.JavaCrush.game.Board;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
@@ -75,7 +76,6 @@ public class CrushView extends JPanel {
 			ImageIcon icn = (ImageIcon) assets.get(val);
 			buttons[i].setIcon(icn);
 		}
-		update(this.getGraphics());
 	}
 
 	public void syncButtonsWithGame (int... ids){
@@ -84,7 +84,11 @@ public class CrushView extends JPanel {
 			ImageIcon icn = (ImageIcon) assets.get(val);
 			buttons[b].setIcon(icn);
 		}
-		update(this.getGraphics());
+	}
+	public void syncButtonsWithGame (ArrayList<Integer> ids){
+		for (int b : ids) {
+			syncButtonsWithGame(b);
+		}
 	}
 
 	public void setAssets(Assets a){

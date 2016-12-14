@@ -1,5 +1,6 @@
 package ch.hepia.it.JavaCrush.game;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -115,6 +116,15 @@ public class Board {
 	 */
 	public void destroyCase (int line, int column) {
 		this.setCase(line, column, -1);
+	}
+
+	ArrayList<Integer> destroyCases (int start, int finish, boolean line){
+		ArrayList<Integer> toReturn = new ArrayList<>();
+		for (int i = start; i <= finish ; i = line ? i+1 : i+this.size) {
+			destroyCase(i);
+			toReturn.add(i);
+		}
+		return toReturn;
 	}
 
 	@Override

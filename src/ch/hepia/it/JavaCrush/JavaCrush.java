@@ -26,7 +26,7 @@ public class JavaCrush {
 		assetsCollection.add(basicAssets);
 		assetsCollection.add(ccAssets);
 		int max = basicAssets.size();
-		int seed = 36;
+		int seed = 42;
 		if (args.length > 0){
 			seed = Integer.valueOf(args[0]);
 		}
