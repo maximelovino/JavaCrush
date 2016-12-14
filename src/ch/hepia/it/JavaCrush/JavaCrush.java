@@ -92,6 +92,7 @@ public class JavaCrush {
 			System.out.println("Joined everything");
 			System.out.println("score "+score);
 			JOptionPane.showMessageDialog(frame,"Your score is "+score.get()+" points");
+			System.exit(0);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

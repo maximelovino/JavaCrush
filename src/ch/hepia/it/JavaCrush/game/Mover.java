@@ -2,10 +2,11 @@ package ch.hepia.it.JavaCrush.game;
 
 import ch.hepia.it.JavaCrush.gui.CrushView;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
-public class Mover extends Thread{
+public class Mover extends Thread {
 	private Board b;
 	private CrushView view;
 	private Lock lock;
@@ -20,7 +21,7 @@ public class Mover extends Thread{
 
 	@Override
 	public void run () {
-		while(running.get()) {
+		while (running.get()) {
 			this.lock.lock();
 			move();
 			this.lock.unlock();
@@ -29,24 +30,28 @@ public class Mover extends Thread{
 
 	}
 
-	public void move(){
+	public void move () {
+		//TODO use a list of everything to sync and sync at the end
 		int emptyCnt;
+		ArrayList<Integer> toSync = new ArrayList<>();
 		for (int col = 0; col < this.b.getSize(); col++) {
 			emptyCnt = 0;
-			for (int i = this.b.getSize() - 1; i >= 0 ; i--) {
-				if (this.b.getCase(i,col) == -1){
-					emptyCnt ++;
-				}else{
-					if (emptyCnt > 0){
-						this.b.swap(i,col,i+emptyCnt,col);
-						view.syncButtonsWithGame(i * this.b.getSize() + col, (i + emptyCnt) * this.b.getSize() + col);
+			for (int line = this.b.getSize() - 1; line >= 0; line--) {
+				if (this.b.isEmpty(line,col)) {
+					emptyCnt++;
+				} else {
+					if (emptyCnt > 0) {
+						this.b.swap(line, col, line + emptyCnt, col);
+						toSync.add(line * this.b.getSize() + col);
+						toSync.add((line + emptyCnt) * this.b.getSize() + col);
 					}
 				}
 			}
 			for (int j = 0; j < emptyCnt; j++) {
-				this.b.setRandomCase(j,col);
-				view.syncButtonsWithGame(j * this.b.getSize() + col);
+				this.b.setRandomCase(j, col);
+				toSync.add(j * this.b.getSize() + col);
 			}
 		}
+		view.syncButtonsWithGame(toSync);
 	}
 }
