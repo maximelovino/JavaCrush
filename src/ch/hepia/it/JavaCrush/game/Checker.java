@@ -13,31 +13,27 @@ public class Checker extends Thread {
 	private CrushView view;
 	private AtomicInteger score;
 	private Lock lock;
-	private AtomicBoolean checkingH, checkingV;
-	private AtomicBoolean effect;
 	private AtomicBoolean running;
 
-	public Checker (boolean line, Board b, CrushView view, AtomicInteger score, Lock lock, AtomicBoolean checkingH, AtomicBoolean checkingV, AtomicBoolean effect, AtomicBoolean running) {
+	public Checker (boolean line, Board b, CrushView view, AtomicInteger score, Lock lock, AtomicBoolean running) {
 		this.line = line;
 		this.b = b;
 		this.view = view;
 		this.score = score;
 		this.lock = lock;
-		this.checkingH = checkingH;
-		this.checkingV = checkingV;
-		this.effect = effect;
 		this.running = running;
 	}
 
 	@Override
 	public void run () {
-		//TODO replace with other variables from timer, or main, so we can then join cleanly
-		//TODO find a way to get the score cleanly permanently, or at least at the end (with the join)
 		while (running.get()) {
+			try {
+				sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			this.lock.lock();
 			boardCheck();
-			if (line) checkingH.set(false);
-			else checkingV.set(false);
 			this.lock.unlock();
 		}
 	}
@@ -60,7 +56,6 @@ public class Checker extends Thread {
 							int toAdd = cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
 							score.addAndGet(toAdd);
 							System.out.println("found something at " + i);
-							effect.set(true);
 							int start = line ? toCheck * this.b.getSize() + (i - cnt + 1) : (i - cnt + 1) * this.b.getSize() + toCheck;
 							int finish = line ? toCheck * this.b.getSize() + i : i * this.b.getSize() + toCheck;
 							toSync.addAll(this.b.destroyCases(start, finish, line));
@@ -69,8 +64,6 @@ public class Checker extends Thread {
 				} else {
 					if (cnt >= 3) {
 						System.out.println("found something at " + i);
-						effect.set(true);
-						//50 pour 3 cases identiques alignées, 150 pour 4 et 400 pour 5
 						int toAdd = cnt == 3 ? 50 : cnt == 4 ? 150 : 400;
 						score.addAndGet(toAdd);
 						int start = line ? toCheck * this.b.getSize() + (i-1 - cnt) : (i - cnt) * this.b.getSize() + toCheck;
@@ -83,9 +76,5 @@ public class Checker extends Thread {
 			}
 		}
 		if (!toSync.isEmpty()) view.syncButtonsWithGame(toSync);
-	}
-
-	public AtomicInteger getScore () {
-		return score;
 	}
 }

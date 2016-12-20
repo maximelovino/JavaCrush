@@ -40,13 +40,17 @@ public class Board {
 		}
 	}
 
-	public static Board generateRandomBoard (int size, int range, Integer seed) {
+	public static Board generateRandomBoard (int size, int range) {
 		Board b = new Board(size, range);
+		b.shuffle();
+		return b;
+	}
+
+	public static Board generateRandomBoard (int size, int range, Integer seed) {
 		if (seed != null){
 			rnd.setSeed(seed);
 		}
-		b.shuffle();
-		return b;
+		return generateRandomBoard(size,range);
 	}
 
 	public void swap (int firstCase, int secondCase) {

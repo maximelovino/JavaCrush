@@ -23,32 +23,33 @@ public class JavaCrush {
 		Assets basicAssets = new Assets(assetsPath, "Basic");
 		ArrayList<Assets> assetsCollection = new ArrayList<>();
 		Assets ccAssets = new Assets("assets/cc","Creative Cloud");
+		Assets progAssets = new Assets("assets/prog", "Programming");
+		Assets octoAssets = new Assets("assets/octo", "Octocats Github");
 		assetsCollection.add(basicAssets);
 		assetsCollection.add(ccAssets);
+		assetsCollection.add(progAssets);
+		assetsCollection.add(octoAssets);
 		int max = basicAssets.size();
 		int seed = 42;
 		if (args.length > 0){
 			seed = Integer.valueOf(args[0]);
 		}
-		Board b = Board.generateRandomBoard(size,max, seed);
+		Board b = Board.generateRandomBoard(size,max);
 		System.out.println(b);
 		JFrame frame = new JFrame("JavaCrush");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		AtomicBoolean checkingH = new AtomicBoolean(false);
-		AtomicBoolean checkingV = new AtomicBoolean(false);
-		AtomicBoolean effect = new AtomicBoolean(false);
 		AtomicBoolean running = new AtomicBoolean(true);
 		Lock lock = new ReentrantLock();
-		CrushView view = new CrushView(basicAssets,size,b, lock, checkingH, checkingV, effect);
+		CrushView view = new CrushView(basicAssets,size,b, lock);
 		final int TIME = 40;
 		JLabel timing = new JLabel(String.valueOf(TIME));
 		Timer timer = new Timer(TIME,running, timing);
 		Mover mover = new Mover(b,view, lock, running);
 		AtomicInteger score = new AtomicInteger(0);
 
-		Checker lineChecker = new Checker(true,b,view, score, lock, checkingH, checkingV, effect, running);
-		Checker colChecker = new Checker(false,b,view, score, lock, checkingH, checkingV, effect, running);
+		Checker lineChecker = new Checker(true,b,view, score, lock, running);
+		Checker colChecker = new Checker(false,b,view, score, lock, running);
 		lineChecker.start();
 		colChecker.start();
 		mover.start();
