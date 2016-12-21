@@ -61,6 +61,8 @@ public class Mover extends Thread {
 			for (int line = this.b.getSize() - 1; line >= 0; line--) {
 				if (this.b.isEmpty(line,col)) {
 					emptyCnt++;
+					this.b.setRandomCase(line,col);
+					toSync.add(line * this.b.getSize() + col);
 				} else {
 					if (emptyCnt > 0) {
 						this.b.swap(line, col, line + emptyCnt, col);
@@ -68,10 +70,6 @@ public class Mover extends Thread {
 						toSync.add((line + emptyCnt) * this.b.getSize() + col);
 					}
 				}
-			}
-			for (int j = 0; j < emptyCnt; j++) {
-				this.b.setRandomCase(j, col);
-				toSync.add(j * this.b.getSize() + col);
 			}
 		}
 		view.syncButtonsWithGame(toSync);

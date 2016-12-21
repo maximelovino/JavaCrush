@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class JavaCrush {
 	public static void main (String[] args) {
 		int size = 10;
+
 		String assetsPath = "assets/basic";
 		Assets basicAssets = new Assets(assetsPath, "Basic");
 		ArrayList<Assets> assetsCollection = new ArrayList<>();
@@ -28,21 +29,19 @@ public class JavaCrush {
 		assetsCollection.add(basicAssets);
 		assetsCollection.add(ccAssets);
 		assetsCollection.add(progAssets);
-		assetsCollection.add(octoAssets);
+		assetsCollection.add(octoAssets	);
+
 		int max = basicAssets.size();
-		int seed = 42;
-		if (args.length > 0){
-			seed = Integer.valueOf(args[0]);
-		}
-		Board b = Board.generateRandomBoard(size,max);
-		System.out.println(b);
+
 		JFrame frame = new JFrame("JavaCrush");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		Board b = Board.generateRandomBoard(size,max);
+		System.out.println(b);
+		final int TIME = Integer.valueOf(JOptionPane.showInputDialog(frame,"How long should the timer be in seconds?", 30));
 		AtomicBoolean running = new AtomicBoolean(true);
 		Lock lock = new ReentrantLock();
 		CrushView view = new CrushView(basicAssets,size,b, lock);
-		final int TIME = 40;
 		JLabel timing = new JLabel(String.valueOf(TIME));
 		Timer timer = new Timer(TIME,running, timing);
 		Mover mover = new Mover(b,view, lock, running);
