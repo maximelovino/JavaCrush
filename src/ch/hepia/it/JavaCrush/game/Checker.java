@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * Thread that checks the board and destroy matches
+ */
 public class Checker extends Thread {
 	private boolean line;
 	private Board b;
@@ -15,6 +18,15 @@ public class Checker extends Thread {
 	private Lock lock;
 	private AtomicBoolean running;
 
+	/**
+	 * Constructor for the checker thread
+	 * @param line		If the checker is a line checker (otherwise column checker)
+	 * @param b			The board
+	 * @param view		The view
+	 * @param score		The score, to update
+	 * @param lock		A lock, for synchronization
+	 * @param running	A flag to tell if the program is running
+	 */
 	public Checker (boolean line, Board b, CrushView view, AtomicInteger score, Lock lock, AtomicBoolean running) {
 		this.line = line;
 		this.b = b;
@@ -24,6 +36,9 @@ public class Checker extends Thread {
 		this.running = running;
 	}
 
+	/**
+	 * Run method for this thread
+	 */
 	@Override
 	public void run () {
 		while (running.get()) {
@@ -38,6 +53,9 @@ public class Checker extends Thread {
 		}
 	}
 
+	/**
+	 * Method that will check the board and set empty cases for the matching cases
+	 */
 	public void boardCheck () {
 		int cnt, lastVal;
 		ArrayList<Integer> toSync = new ArrayList<>();

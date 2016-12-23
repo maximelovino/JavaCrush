@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Main class of our program, creates all our objects and launches the windows
+ */
 public class JavaCrush {
 	public static void main (String[] args) {
 		int size = 10;

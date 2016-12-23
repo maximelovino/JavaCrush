@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * View for our JavaCrush board
+ */
 public class CrushView extends JPanel {
-
 	private Assets assets;
 	private final int size;
 	private JButton[] buttons;
@@ -19,7 +21,13 @@ public class CrushView extends JPanel {
 	private int firstCase = -1;
 	private Lock lock;
 
-
+	/**
+	 * Constructor for our view
+	 * @param assets	An assets object for the icon pack of the board
+	 * @param size		The size of the side of the board
+	 * @param game		The board of the game (the model)
+	 * @param lock		The lock, for synchronization
+	 */
 	public CrushView (Assets assets, int size, Board game, Lock lock) {
 		super(new GridLayout(size, size));
 		this.assets = assets;
@@ -53,6 +61,9 @@ public class CrushView extends JPanel {
 
 	}
 
+	/**
+	 * Method to update the view from the model (updates the whole board)
+	 */
 	public void syncButtonsWithGame () {
 		for (int i = 0; i < buttons.length; i++) {
 			int val = this.game.getCase(i);
@@ -61,6 +72,10 @@ public class CrushView extends JPanel {
 		}
 	}
 
+	/**
+	 * Method to update specific cells of the view from the model
+	 * @param ids	The cells to update
+	 */
 	public void syncButtonsWithGame (int... ids){
 		for (int b : ids) {
 			int val = this.game.getCase(b);
@@ -68,12 +83,21 @@ public class CrushView extends JPanel {
 			buttons[b].setIcon(icn);
 		}
 	}
+
+	/**
+	 * Method to update specific cells of the view from the model
+	 * @param ids	A list of cells to update
+	 */
 	public void syncButtonsWithGame (ArrayList<Integer> ids){
 		for (int b : ids) {
 			syncButtonsWithGame(b);
 		}
 	}
 
+	/**
+	 * A method to change assets of the view
+	 * @param a	The new assets
+	 */
 	public void setAssets(Assets a){
 		this.assets = a;
 		syncButtonsWithGame();
